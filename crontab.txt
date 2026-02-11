@@ -1,2 +1,1 @@
-# Запуск каждые 2 минуты (формат /etc/cron.d: user — 6-е поле)
-*/2 * * * * root /usr/local/bin/run_job.sh >> /var/log/cron.log 2>&1
+0 * * * * root /usr/local/bin/run_job.sh >> /var/log/cron.log 2>&1
