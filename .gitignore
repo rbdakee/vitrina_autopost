@@ -1,0 +1,7 @@
+locals/
+credentials.json
+.env
+__pycache__/
+.venv/
+venv/
+.DS_Store

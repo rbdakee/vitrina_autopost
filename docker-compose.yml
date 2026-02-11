@@ -1,0 +1,14 @@
+# Один контейнер: внутри cron раз в N минут запускает auto_post.py
+# Интервал задаётся в crontab.txt (сейчас */2 = каждые 2 минуты)
+services:
+  poster:
+    build: .
+    image: vitrina-autopost-poster:latest
+    container_name: vitrina-autopost
+    env_file: .env
+    environment:
+      # В контейнере ключ монтируется как /app/sa.json
+      - GOOGLE_SERVICE_ACCOUNT_JSON=/app/sa.json
+    volumes:
+      - ./credentials.json:/app/sa.json:ro
+    restart: unless-stopped
