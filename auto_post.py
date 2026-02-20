@@ -133,16 +133,29 @@ def ensure_history_header(ws_history):
 
 def read_setup_destinations(ws_setup) -> List[dict]:
     """Возвращает список {user, platform}. Группировка по user — в main."""
-    records = ws_setup.get_all_records()
+    # Читаем все значения, затем обрабатываем только первые 3 столбца
+    all_values = ws_setup.get_all_values()
+    if not all_values or len(all_values) < 2:
+        return []
+    
     dests: List[dict] = []
-    for r in records:
-        rn = normalize_headers(r)
-        user = str(rn.get(COL_USERS) or "").strip()
-        if not user:
+    # Обрабатываем строки данных (начиная со второй)
+    for row in all_values[1:]:
+        if len(row) < 3:
             continue
-        for pcol in PLATFORM_COLUMNS:
-            if is_true(rn.get(pcol)):
-                dests.append({"user": user, "platform": pcol})
+        # Берем только первые 3 столбца
+        user_val = str(row[0] or "").strip()
+        instagram_val = str(row[1] or "").strip() if len(row) > 1 else ""
+        tiktok_val = str(row[2] or "").strip() if len(row) > 2 else ""
+        
+        if not user_val:
+            continue
+        
+        # Проверяем платформы
+        if is_true(instagram_val):
+            dests.append({"user": user_val, "platform": "instagram"})
+        if is_true(tiktok_val):
+            dests.append({"user": user_val, "platform": "tiktok"})
     return dests
 
 
